@@ -1,26 +1,23 @@
-# Sabdhabhandar
+# Shabdhabhandar (शब्दभण्डार)
 
-Sabdhabhandar is a lightweight, efficient dictionary translation web application built with **Django** and **Pandas**. It allows users to search for words and receive instant translations based on a pre-defined dataset.
+Shabdhabhandar is a lightweight, responsive dictionary translation web application designed to provide quick and accurate English-to-Nepali translations.
 
+## 🚀 Features
+- **Instant Translation**: Search for English words and receive immediate Nepali translations powered by a Pandas-integrated SQLite backend.
+- **Word of the Day**: A dynamic feature that displays a random word from the database on every visit.
+- **Search History**: Tracks recent user searches using Django session storage.
+- **Responsive Design**: Mobile-friendly layout using CSS Flexbox.
+- **Privacy First**: Includes a dedicated Privacy and Fair Dealing policy compliant with local standards.
 
+## 🛠️ Tech Stack
+- **Framework**: Django 5.2
+- **Data Handling**: Pandas
+- **Database**: SQLite
+- **Frontend**: HTML5, CSS3 (Flexbox), JavaScript
 
-## Features
-- **Fast Lookup**: Uses Pandas for quick data retrieval from a local CSV file.
-- **Clean UI**: Built with a simple, responsive interface.
-- **Easy Setup**: Minimal configuration required to get started.
+## 📦 How to Run Locally
 
-## Tech Stack
-- **Framework**: Django (Python)
-- **Data Processing**: Pandas
-- **Database**: SQLite (Default Django)
-
-## Getting Started
-
-### Prerequisites
-Ensure you have **Python 3.11+** installed on your machine.
-
-### Installation
-1. **Clone the repository:**
+1. **Clone the repository**:
    ```bash
    git clone [https://github.com/manojkc-dev/sabdhabhandar.git](https://github.com/manojkc-dev/sabdhabhandar.git)
    cd sabdhabhandar
