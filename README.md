@@ -11,7 +11,6 @@ Shabdhabhandar is a lightweight, responsive dictionary translation web applicati
 
 ## 🛠️ Tech Stack
 - **Framework**: Django 5.2
-- **Data Handling**: Pandas
 - **Database**: SQLite
 - **Frontend**: HTML5, CSS3 (Flexbox), JavaScript
 
