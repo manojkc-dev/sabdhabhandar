@@ -19,7 +19,7 @@ class TranslateWordAPI(APIView):
         try:
             db_word = DictionaryWord.objects.get(english_word=clean_word)
             
-            # Update session history
+            
             history = request.session.get('recent_searches', [])
             if clean_word not in history:
                 history.insert(0, clean_word)
@@ -35,13 +35,10 @@ class TranslateWordAPI(APIView):
             return Response({"error": "Word not found"}, status=status.HTTP_404_NOT_FOUND)
 
 def homepage(request):
-    # 1. Fetch a random word for the Word of the Day
     random_word = DictionaryWord.objects.order_by('?').first()
     
-    # 2. Fetch the recent searches from the session
     recent_searches = request.session.get('recent_searches', [])
     
-    # Let's print this to the terminal every time you refresh the page
     print("DEBUG HOMEPAGE: Loading page. Current session history is:", recent_searches)
 
     context = {
@@ -57,18 +54,14 @@ def translate_view(request):
         return JsonResponse({'error': 'No word provided'}, status=400)
 
     try:
-        # Look up the word in your SQLite Database
         db_word = DictionaryWord.objects.get(english_word=word)
         
-        # --- THE MAGIC SESSION SAVING CODE ---
         history = request.session.get('recent_searches', [])
         if word not in history:
             history.insert(0, word)
             request.session['recent_searches'] = history[:5]
             request.session.modified = True 
-        # -------------------------------------
         
-        # Let's print this to the terminal to PROVE the session saved
         print(f"DEBUG TRANSLATE: User translated '{word}'. Saved history is now: {request.session['recent_searches']}")
 
         return JsonResponse({
