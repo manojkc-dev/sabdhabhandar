@@ -21,5 +21,6 @@ from api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')), # This routes api/... to your api app
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('', views.homepage, name='homepage'),
 ]

@@ -1,128 +1,283 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sabdhabhandar</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shabdhabhandar | Dictionary</title>
     <style>
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f7f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-      .search-container {
-        background: white;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        width: 100%;
-        max-width: 400px;
-      }
-      h1 {
-        color: #2c3e50;
-        margin-bottom: 20px;
-      }
-      input {
-        width: 80%;
-        padding: 12px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        font-size: 16px;
-        margin-bottom: 15px;
-        outline: none;
-      }
-      input:focus {
-        border-color: #3498db;
-      }
-      button {
-        background-color: #3498db;
-        color: white;
-        border: none;
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      button:hover {
-        background-color: #2980b9;
-      }
-      #result-box {
-        margin-top: 25px;
-        padding: 15px;
-        border-radius: 8px;
-        background-color: #e8f4f8;
-        display: none; /* Hidden until searched */
-        font-size: 18px;
-        color: #2c3e50;
-      }
-      .error {
-        background-color: #fce4e4 !important;
-        color: #cc0000 !important;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="search-container">
-      <h1>Sabdhabhandar</h1>
-      <input
-        type="text"
-        id="wordInput"
-        placeholder="Enter an English word..."
-      />
-      <br />
-      <button onclick="searchWord()">Translate</button>
-
-      <div id="result-box"></div>
-    </div>
-
-    <script>
-      function searchWord() {
-        const word = document.getElementById("wordInput").value;
-        const resultBox = document.getElementById("result-box");
-
-        if (!word) {
-          alert("Please enter a word!");
-          return;
+        /* CSS Variables for consistent colors and spacing */
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --radius: 16px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        // Calling Django API!
-        fetch(`/api/translate/?word=${word}`)
-          .then((response) => response.json())
-          .then((data) => {
-            resultBox.style.display = "block"; // Show the box
-            resultBox.classList.remove("error");
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the body takes up the full screen height */
+            box-sizing: border-box;
+        }
 
-            if (data.error) {
-              resultBox.classList.add("error");
-              resultBox.innerHTML = `<strong>Oops:</strong> ${data.error}`;
-            } else {
-              // Display the Nepali translation
-              let translation = Array.isArray(data.nepali_translation)
-                ? data.nepali_translation.join(", ")
-                : data.nepali_translation;
+        /* Container to keep everything centered */
+        .app-container {
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; 
+            /* The 'margin: auto' here pushes equal space to the top and bottom, 
+               perfectly centering the content vertically so it isn't top-heavy! */
+            margin: auto; 
+            padding-top: 2rem; 
+            padding-bottom: 2rem;
+        }
 
-              resultBox.innerHTML = `<strong>${data.english_word}:</strong> ${translation}`;
+        /* The Card UI */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        h1 { margin-top: 0; color: #111827; font-size: 2rem; }
+        h3 { margin-top: 0; color: var(--text-muted); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Search Input */
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="text"] {
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 99px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        /* Beautiful Button */
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 99px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:hover { background-color: var(--primary-hover); }
+        button:active { transform: scale(0.98); }
+
+        /* Result Box Formatting */
+        #result-box {
+            display: none;
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e3a8a;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Word of the Day Formatting */
+        .wotd-text { font-size: 1.25rem; margin: 0; }
+        .wotd-text strong { color: var(--primary); }
+
+        /* Recent Searches Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: #e5e7eb;
+            color: #374151;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* FOOTER STYLING */
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto; /* Centers the footer horizontally */
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem 0;
+        }
+
+        .footer-links {
+            margin-top: 0.5rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .bullet {
+            color: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="app-container">
+        
+        <div class="card">
+            <h1>Shabdhabhandar</h1>
+            <div class="input-wrapper">
+                <input type="text" id="wordInput" placeholder="Enter an English word..." onkeypress="handleKeyPress(event)" />
+                <button onclick="searchWord()">Translate</button>
+            </div>
+            
+            <div id="result-box"></div>
+        </div>
+
+        {% if random_word %}
+        <div class="card">
+            <h3>Word of the Day</h3>
+            <p class="wotd-text">
+                <strong>{{ random_word.english_word }}</strong>: {{ random_word.nepali_translation }}
+            </p>
+        </div>
+        {% endif %}
+
+        {% if recent_searches %}
+        <div class="card">
+            <h3>Recent Searches</h3>
+            <div class="tags-container">
+                {% for word in recent_searches %}
+                    <span class="tag">{{ word }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <footer>
+    <div style="margin-bottom: 10px;">&copy; 2026 Shabdhabhandar. All Rights Reserved.</div>
+    <div style="margin-bottom: 15px;">Designed & Developed with by Manoj Khatri</div>
+    
+    <div class="footer-nav" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <a href="mailto:khatrimanoj2135@gmail.com?subject=Inquiry regarding Shabdhabhandar" class="dropbtn">Contact Us</a>
+      <a href="/api/privacy-policy/">Privacy & Fair Use Policy</a>
+    </div>
+</footer>
+
+<style>
+    /* Footer Dropdown Styling */
+    .dropdown { position: relative; display: inline-block; }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        bottom: 100%; /* Opens upwards */
+        left: 0;
+        background-color: #ffffff;
+        min-width: 150px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        z-index: 1;
+        padding: 10px 0;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+    .dropdown-content a {
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 0.9rem;
+    }
+    .dropdown-content a:hover { background-color: #f3f4f6; }
+</style>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchWord();
             }
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+        }
 
-      // Listen for keyboard presses inside the input box
-      document
-        .getElementById("wordInput")
-        .addEventListener("keypress", function (event) {
-          // If the user presses the "Enter" key on the keyboard
-          if (event.key === "Enter") {
-            event.preventDefault(); // Prevent any default page refreshing
-            searchWord(); // Run the translation function!
-          }
-        });
+        function searchWord() {
+            const wordInput = document.getElementById("wordInput");
+            const word = wordInput.value.trim().toLowerCase();
+            const resultBox = document.getElementById("result-box");
+
+            if (!word) {
+                alert("Please enter a word!");
+                wordInput.focus();
+                return;
+            }
+
+            fetch(`/translate/?word=${word}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Word not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultBox.style.display = "block";
+                    resultBox.style.backgroundColor = "#eff6ff";
+                    resultBox.style.borderColor = "#bfdbfe";
+                    resultBox.style.color = "#1e3a8a";
+                    resultBox.innerHTML = `<strong>${data.english_word}:</strong> ${data.nepali_translation}`;
+                    
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                })
+                .catch(error => {
+                    resultBox.style.display = "block";
+                    resultBox.style.backgroundColor = "#fef2f2";
+                    resultBox.style.borderColor = "#fecaca";
+                    resultBox.style.color = "#991b1b";
+                    resultBox.innerHTML = `Sorry, "${word}" was not found in the dictionary.`;
+                });
+        }
     </script>
-  </body>
+</body>
 </html>
